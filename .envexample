@@ -1,0 +1,2 @@
+MONGO_URI=mongodb+srv://user:<password>@capzink0.x0sqg.mongodb.net/YOURDATABASE?retryWrites=true&w=majority
+PORT=

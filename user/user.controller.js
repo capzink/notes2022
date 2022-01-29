@@ -54,7 +54,8 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(500).json("password is not valid");
     }
-  res.status(200).json({user}) //user.profile
+  const token = user.createJWT(req.body);
+  res.status(200).json({user, token}) //user.profile
 
 };
 

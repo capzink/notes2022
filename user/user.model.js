@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bycrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema(
   {
@@ -57,6 +58,14 @@ userSchema.pre("save", async function () {
         next(error)  
     }
 });
+
+userSchema.methods.createJWT = function (payload) {
+  return jwt.sign(
+    payload,
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_LIFETIME }
+  );
+};
 
 userSchema.methods.comparePassword = async function (passwordcheck) {
   const isMatch = await bycrypt.compare(passwordcheck, this.password);
