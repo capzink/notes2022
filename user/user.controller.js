@@ -15,26 +15,34 @@ const createUsers = async (req, res) => {
 const getAllUsers= async(req,res)=>{
   try {
     const users = await User.find({})
-    if(!users){
-      res.status(500).json('there a no users in data base')
-    }
     res.status(200).json({ users });
   } catch (error) {
-    res.status(400).json("something went wrong");  
+    res.status(400).json("there a no users in data base");  
   }
-  
-   
 }
-const getUser = (req, res) => {
-  res.send("get a user");
+const getUser = async (req, res) => {
+  const {id:userId}=req.params
+  try {
+    const user = await User.findById({_id:userId})
+     res.status(200).json({ user });
+    
+  } catch (error) {
+      res.status(400).json("no user with that Id");  
+    
+  }
 };
-const updateUser = (req, res) => {
-  res.send("update user route");
+// const updateUser = (req, res) => {
+//   res.send("update user route");
+// };
+const deleteUsers = async (req, res) => {
+    const { id: userId } = req.params;
+    try {
+      const user = await User.findOneAndDelete({ _id: userId });
+      res.status(200).json('user Deleted' );
+    } catch (error) {
+      res.status(400).json("no user with that Id");
+    }
 };
-const deleteUsers = (req, res) => {
-  res.send("delete a user route");
-};
-
 const login = (req, res) => {
   res.send("login route");
 };
@@ -43,7 +51,6 @@ module.exports = {
   createUsers,
   getAllUsers,
   getUser,
-  updateUser,
   deleteUsers,
   login
 };
