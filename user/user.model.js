@@ -25,6 +25,12 @@ const userSchema = mongoose.Schema({
     required: true["Please add a password"],
     minLength: 6,
   },
+  active: {
+    type: Boolean,
+    default: false,
+  }
+
+ 
 });
 
 module.exports = mongoose.model('User', userSchema)
