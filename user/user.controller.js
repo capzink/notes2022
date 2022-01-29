@@ -1,12 +1,29 @@
+const { json } = require('express/lib/response');
 const User = require('./user.model')
 
 
 
-const createUsers = (req, res) => {
-  res.send("greate user");
+const createUsers = async (req, res) => {
+  try {
+    const user = await User.create(req.body)
+    res.status(200).json('user created')
+    
+  } catch (error) {
+    res.status(400).json('something went wrong we cannot create user') 
+  }
 };
-const getAllUsers= (req,res)=>{
-    res.send('get all users route')
+const getAllUsers= async(req,res)=>{
+  try {
+    const users = await User.find({})
+    if(!users){
+      res.status(500).json('there a no users in data base')
+    }
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(400).json("something went wrong");  
+  }
+  
+   
 }
 const getUser = (req, res) => {
   res.send("get a user");
