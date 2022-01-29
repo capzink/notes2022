@@ -1,8 +1,6 @@
 const { json } = require('express/lib/response');
 const User = require('./user.model')
 
-
-
 const createUsers = async (req, res) => {
   try {
     const user = await User.create(req.body)
@@ -43,8 +41,21 @@ const deleteUsers = async (req, res) => {
       res.status(400).json("no user with that Id");
     }
 };
-const login = (req, res) => {
-  res.send("login route");
+const login = async (req, res) => {
+  const {email, password}=req.body
+  if(!email || !password){
+    res.status(400).json('need Email and Password')
+  }
+  const user =  await User.findOne({email})
+  if(!email){
+    res.status(500).json('email not found, pelase try a new one')
+  }
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      res.status(500).json("password is not valis");
+    }
+    res.status(200).json({user})
+
 };
 
 module.exports = {
