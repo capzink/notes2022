@@ -44,17 +44,17 @@ const deleteUsers = async (req, res) => {
 const login = async (req, res) => {
   const {email, password}=req.body
   if(!email || !password){
-    res.status(400).json('need Email and Password')
+    return res.status(400).json('need Email and Password')
   }
   const user =  await User.findOne({email})
   if(!email){
-    res.status(500).json('email not found, pelase try a new one')
+    return res.status(500).json('email not found, pelase try a new one')
   }
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
-      res.status(500).json("password is not valis");
+      return res.status(500).json("password is not valid");
     }
-    res.status(200).json({user})
+  res.status(200).json({user}) //user.profile
 
 };
 

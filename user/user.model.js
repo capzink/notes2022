@@ -63,6 +63,11 @@ userSchema.methods.comparePassword = async function (passwordcheck) {
   return isMatch;
 };
 
+// userSchema.virtual('profile').get(function(){
+//     const {firstName, email,  role}= this
+//     return {description: `${firstName} con role ${role}`}
+// })
+
 
 
 module.exports = mongoose.model('User', userSchema)
