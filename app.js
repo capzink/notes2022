@@ -3,13 +3,15 @@ require('dotenv').config()
 const app = express();
 const connectDB = require('./config/connectdb')
 
-
-
 const port = process.env.PORT || 3001
 app.use(express.json())
+
 //routes
 const userRoute = require('./user/user.route')
-app.use("/", userRoute)
+const noteRoute = require("./notes/notes.routes");
+app.use("/user", userRoute)
+app.use("/notes", noteRoute);
+
 
 
 

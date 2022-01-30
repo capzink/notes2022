@@ -8,8 +8,8 @@ const {
   login
 }=require('./user.controller')
 
-router.route("/user").get(getAllUsers).post(createUsers);
-router.route("/user/:id").delete(deleteUsers).get(getUser);
+router.route("/").get(getAllUsers).post(createUsers);
+router.route("/:id").delete(deleteUsers).get(getUser);
 router.route('/login').post(login)
 
 

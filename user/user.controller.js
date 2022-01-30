@@ -1,62 +1,57 @@
-const { json } = require('express/lib/response');
-const User = require('./user.model')
+const User = require("./user.model");
 
 const createUsers = async (req, res) => {
   try {
-    const user = await User.create(req.body)
-    res.status(200).json('user created')
-    
+    const user = await User.create(req.body);
+    res.status(200).json({ user, msg: "user created" });
   } catch (error) {
-    res.status(400).json('something went wrong we cannot create user') 
+    res.status(400).json("something went wrong we cannot create user");
   }
 };
-const getAllUsers= async(req,res)=>{
+const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({})
+    const users = await User.find({});
     res.status(200).json({ users });
   } catch (error) {
-    res.status(400).json("there a no users in data base");  
+    res.status(400).json("there a no users in data base");
   }
-}
+};
 const getUser = async (req, res) => {
-  const {id:userId}=req.params
+  const { id: userId } = req.params;
   try {
-    const user = await User.findById({_id:userId})
-     res.status(200).json({ user });
-    
+    const user = await User.findById({ _id: userId });
+    res.status(200).json({ user });
   } catch (error) {
-      res.status(400).json("no user with that Id");  
-    
+    res.status(400).json("no user with that Id");
   }
 };
 // const updateUser = (req, res) => {
 //   res.send("update user route");
 // };
 const deleteUsers = async (req, res) => {
-    const { id: userId } = req.params;
-    try {
-      const user = await User.findOneAndDelete({ _id: userId });
-      res.status(200).json('user Deleted' );
-    } catch (error) {
-      res.status(400).json("no user with that Id");
-    }
+  const { id: userId } = req.params;
+  try {
+    const user = await User.findOneAndDelete({ _id: userId });
+    res.status(200).json("user Deleted");
+  } catch (error) {
+    res.status(400).json("no user with that Id");
+  }
 };
 const login = async (req, res) => {
-  const {email, password}=req.body
-  if(!email || !password){
-    return res.status(400).json('need Email and Password')
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json("need Email and Password");
   }
-  const user =  await User.findOne({email})
-  if(!email){
-    return res.status(500).json('email not found, pelase try a new one')
+  const user = await User.findOne({ email });
+  if (!email) {
+    return res.status(500).json("email not found, pelase try a new one");
   }
-    const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      return res.status(500).json("password is not valid");
-    }
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    return res.status(500).json("password is not valid");
+  }
   const token = user.createJWT(req.body);
-  res.status(200).json({user, token}) //user.profile
-
+  res.status(200).json({ user, token }); //user.profile
 };
 
 module.exports = {
@@ -64,5 +59,5 @@ module.exports = {
   getAllUsers,
   getUser,
   deleteUsers,
-  login
+  login,
 };
