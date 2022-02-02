@@ -19,7 +19,7 @@ const {
 router
   .route("/")
   .get(getAllNotes)
-  .post(isAuthenticated,(req,res,next)=>hasRole(req,res,next,'admin'), createNote);
+  .post(hasRole(['user', 'admin']), createNote);
 router
   .route("/:id")
   .get(getNote)

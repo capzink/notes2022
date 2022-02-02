@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../user/user.model");
+const compose =require('composable-middleware')
 
 const getUserbyEmail = async (email) => {
   try {
@@ -10,8 +11,10 @@ const getUserbyEmail = async (email) => {
   }
 };
 
-const isAuthenticated = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+const isAuthenticated =  (req, res, next) => {
+  return compose().use(
+    async (req,res, next)=>{
+      const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(500).json({ msg: "No Token provided" });
   }
@@ -23,12 +26,24 @@ const isAuthenticated = async (req, res, next) => {
     }
     req.user = user
     next();
+    }
+  )
 };
 
-const hasRole = (req,res,next,role)=>{
-  console.log(req,res,next,role)
-  next()
+const hasRole = (roles)=>{
+  return compose().use(isAuthenticated()).
+  use((req,res,next)=>{
+    const { user } = req;
+    if (roles.includes(user.role)) {
+      return res.status(403).json("forbidden");
+    }
+
+    // if(!user.roles.includes(role)){
+    //   return res.status(403).json("forbidden");
+    // }
+    next();
  
+  })
 }
 
 module.exports = { isAuthenticated, getUserbyEmail, hasRole };
