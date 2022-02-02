@@ -38,20 +38,26 @@ const deleteUsers = async (req, res) => {
   }
 };
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json("need Email and Password");
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json("need Email and Password");
+    }
+    const user = await User.findOne({ email });
+    if (!email) {
+      return res.status(500).json("email not found, pelase try a new one");
+    }
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      return res.status(500).json("password is not valid");
+    }
+    const token = user.createJWT(user);
+    res.status(200).json({ user, token }); //user.profile
+    
+  } catch (error) {
+     return res.status(500).json("user not found");
+
   }
-  const user = await User.findOne({ email });
-  if (!email) {
-    return res.status(500).json("email not found, pelase try a new one");
-  }
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    return res.status(500).json("password is not valid");
-  }
-  const token = user.createJWT(req.body);
-  res.status(200).json({ user, token }); //user.profile
 };
 
 module.exports = {

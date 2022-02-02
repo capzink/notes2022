@@ -50,7 +50,7 @@ const userSchema = mongoose.Schema(
 );
 
 
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
     try {
         const salt = await bycrypt.genSalt(10);
         this.password = await bycrypt.hash(this.password, salt);   
@@ -70,12 +70,13 @@ userSchema.methods.createJWT = function (payload) {
 userSchema.methods.comparePassword = async function (passwordcheck) {
   const isMatch = await bycrypt.compare(passwordcheck, this.password);
   return isMatch;
+  
 };
 
-// userSchema.virtual('profile').get(function(){
-//     const {firstName, email,  role}= this
-//     return {description: `${firstName} con role ${role}`}
-// })
+userSchema.virtual('profile').get(function(){
+    const {firstName, email, role, _id:userId}= this
+    return {description: `${firstName} con role ${role}`}
+})
 
 
 
