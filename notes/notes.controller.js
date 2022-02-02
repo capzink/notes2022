@@ -1,7 +1,6 @@
 const Notes = require('./notes.model')
 
 const createNote = async (req, res)=>{
-    //console.log('user', req.user);
     const {user} = req
    try {
        const newNote = {...req.body, userId: user._id}

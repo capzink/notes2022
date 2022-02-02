@@ -9,13 +9,17 @@ const {
   getNotebyUser,
 } = require("./notes.controller");
 
-const { isAuthenticated} = require("../auth/auth.services");
+const {
+  isAuthenticated,
+  getUserbyEmail,
+  hasRole,
+} = require("../auth/auth.services");
 //const {hasRole} = require('../user/user.services')
 
 router
   .route("/")
   .get(getAllNotes)
-  .post(isAuthenticated, createNote);
+  .post(isAuthenticated,(req,res,next)=>hasRole(req,res,next,'admin'), createNote);
 router
   .route("/:id")
   .get(getNote)
